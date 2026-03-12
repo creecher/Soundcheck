@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prototype — [Feature Name]</title>
+
+  <!-- Design System Theme -->
+  <link rel="stylesheet" href="css/theme.css" />
+
+  <!-- Font Awesome Pro -->
+  <script src="https://kit.fontawesome.com/f628cf1eec.js" crossorigin="anonymous"></script>
+
+  <!-- Tailwind CDN (utility layer on top of theme) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Figtree', 'sans-serif'],
+          },
+          borderRadius: {
+            'border': '4px',
+            'xsm':    '8px',
+            'sm':     '12px',
+            'md':     '16px',
+            'lg':     '24px',
+            'full':   '999px',
+          },
+          spacing: {
+            '0.5': '2px',
+            '1':   '4px',
+            '2':   '8px',
+            '3':   '12px',
+            '4':   '16px',
+            '5':   '20px',
+            '6':   '24px',
+            '8':   '32px',
+            '10':  '40px',
+            '12':  '48px',
+            '16':  '64px',
+            '20':  '80px',
+            '24':  '96px',
+            '32':  '128px',
+          },
+          colors: {
+            mauve: {
+              1: '#fdfcfd', 2: '#faf9fb', 3: '#f2eff3', 4: '#eae7ec',
+              5: '#e3dfe6', 6: '#dbd8e0', 7: '#d0cdd7', 8: '#bcbac7',
+              9: '#8e8c99', 10: '#84828e', 11: '#65636d', 12: '#211f26',
+            },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Prototype-specific overrides go here */
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+    PROTOTYPE CONTENT — Build below this line
+    ============================================= -->
+
+  <div class="container" style="padding-top: var(--space-8); padding-bottom: var(--space-20);">
+
+    <h1>Feature Name</h1>
+    <p class="body-1" style="color: var(--color-text-muted); margin-top: var(--space-2);">
+      Brief description of what this prototype covers.
+    </p>
+
+    <hr class="divider" style="margin-top: var(--space-6);" />
+
+    <!-- Your prototype starts here -->
+
+  </div>
+
+  <!-- =============================================
+    PROTOTYPE ANNOTATION BAR
+    Remove before sharing with non-design stakeholders
+    ============================================= -->
+  <div class="proto-bar">
+    <span class="proto-bar-label">🎙 Soundcheck</span>
+    <span>Feature Name &mdash; [your name] &mdash; <span id="proto-date"></span></span>
+    <span style="margin-left: auto; opacity: 0.5;">Not production code</span>
+  </div>
+
+  <!-- Data Layer — load before app.js -->
+  <script src="js/db.js"></script>
+
+  <!-- App JS -->
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('proto-date').textContent = new Date().toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric'
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,507 @@
+/* ============================================
+   DESIGN SYSTEM THEME
+   Prototype Playground — Not Production Code
+   ============================================ */
+
+/* --- Google Font: Figtree --- */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&display=swap');
+
+/* ============================================
+   SPACING SCALE (4px base grid)
+   ============================================ */
+:root {
+  --space-0:   0px;
+  --space-0-5: 2px;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32:  128px;
+}
+
+/* ============================================
+   BORDER RADIUS
+   ============================================ */
+:root {
+  --radius-border:  4px;
+  --radius-xsmall:  8px;
+  --radius-small:   12px;
+  --radius-medium:  16px;
+  --radius-large:   24px;
+  --radius-full:    999px;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   Font: Figtree | Semibold = 600 | Regular = 400
+   ============================================ */
+:root {
+  --font-sans: 'Figtree', sans-serif;
+
+  /* Headings */
+  --text-h1-size:    44px;
+  --text-h1-lh:      48px;
+  --text-h1-ls:      -0.44px;
+
+  --text-h2-size:    36px;
+  --text-h2-lh:      44px;
+  --text-h2-ls:      -0.19px;
+
+  --text-h3-size:    32px;
+  --text-h3-lh:      40px;
+  --text-h3-ls:      -0.16px;
+
+  --text-h4-size:    28px;
+  --text-h4-lh:      36px;
+  --text-h4-ls:      -0.14px;
+
+  --text-h5-size:    24px;
+  --text-h5-lh:      32px;
+  --text-h5-ls:      -0.1px;
+
+  --text-h6-size:    18px;
+  --text-h6-lh:      24px;
+  --text-h6-ls:      -0.06px;
+
+  /* Subtitles */
+  --text-subtitle1-size: 16px;
+  --text-subtitle1-lh:   24px;
+  --text-subtitle1-ls:   0px;
+
+  --text-subtitle2-size: 14px;
+  --text-subtitle2-lh:   20px;
+  --text-subtitle2-ls:   0px;
+
+  /* Body */
+  --text-body1-size: 16px;
+  --text-body1-lh:   24px;
+  --text-body1-ls:   0px;
+
+  --text-body2-size: 14px;
+  --text-body2-lh:   20px;
+  --text-body2-ls:   0px;
+
+  /* Caption & Overline */
+  --text-caption-size: 12px;
+  --text-caption-lh:   14px;
+  --text-caption-ls:   0px;
+
+  --text-overline-size: 14px;
+  --text-overline-lh:   16px;
+  --text-overline-ls:   1.2px;
+}
+
+/* ============================================
+   RADIX MAUVE — Neutral Scale
+   ============================================ */
+:root {
+  --mauve-1:  #fdfcfd;
+  --mauve-2:  #faf9fb;
+  --mauve-3:  #f2eff3;
+  --mauve-4:  #eae7ec;
+  --mauve-5:  #e3dfe6;
+  --mauve-6:  #dbd8e0;
+  --mauve-7:  #d0cdd7;
+  --mauve-8:  #bcbac7;
+  --mauve-9:  #8e8c99;
+  --mauve-10: #84828e;
+  --mauve-11: #65636d;
+  --mauve-12: #211f26;
+
+  /* Semantic neutrals */
+  --color-bg:           var(--mauve-1);
+  --color-bg-subtle:    var(--mauve-2);
+  --color-border:       var(--mauve-6);
+  --color-border-subtle:var(--mauve-5);
+  --color-text:         var(--mauve-12);
+  --color-text-muted:   var(--mauve-11);
+  --color-text-subtle:  var(--mauve-9);
+}
+
+/* ============================================
+   RADIX ACCENT SCALES
+   Full palette — all 12 steps per color
+   ============================================ */
+:root {
+  /* Red */
+  --red-1:#fffcfc; --red-2:#fff8f8; --red-3:#ffefef; --red-4:#ffe5e5;
+  --red-5:#fdd8d8; --red-6:#f9c6c6; --red-7:#f3aeaf; --red-8:#eb9091;
+  --red-9:#e5484d; --red-10:#d93d42; --red-11:#c62a2f; --red-12:#641723;
+
+  /* Orange */
+  --orange-1:#fefcfb; --orange-2:#fff8f4; --orange-3:#ffedd5; --orange-4:#ffdcb5;
+  --orange-5:#ffcb96; --orange-6:#f5b579; --orange-7:#e59b5f; --orange-8:#d07d3d;
+  --orange-9:#f76b15; --orange-10:#ef5f00; --orange-11:#cc4e00; --orange-12:#582d1d;
+
+  /* Yellow */
+  --yellow-1:#fdfdf9; --yellow-2:#fefce9; --yellow-3:#fffab8; --yellow-4:#fff394;
+  --yellow-5:#ffe770; --yellow-6:#f3d768; --yellow-7:#e4c133; --yellow-8:#d2a200;
+  --yellow-9:#ffe629; --yellow-10:#ffdc00; --yellow-11:#9e6c00; --yellow-12:#473b1f;
+
+  /* Green */
+  --green-1:#fbfefb; --green-2:#f3fcf3; --green-3:#ddf3dd; --green-4:#c6e9c6;
+  --green-5:#addead; --green-6:#8fd18f; --green-7:#65ba65; --green-8:#3da13d;
+  --green-9:#46a758; --green-10:#3d9a50; --green-11:#297c3b; --green-12:#1a3a22;
+
+  /* Teal */
+  --teal-1:#fafefd; --teal-2:#f3fbf9; --teal-3:#d1f4ec; --teal-4:#b0eadf;
+  --teal-5:#8dddd1; --teal-6:#6bcfc2; --teal-7:#3cbdb0; --teal-8:#0da89a;
+  --teal-9:#12a594; --teal-10:#0d9b8a; --teal-11:#007d6f; --teal-12:#003f37;
+
+  /* Blue */
+  --blue-1:#fbfdff; --blue-2:#f5faff; --blue-3:#dceeff; --blue-4:#c2e0ff;
+  --blue-5:#a8d1ff; --blue-6:#8abcf5; --blue-7:#65a2e8; --blue-8:#3d84d6;
+  --blue-9:#0090ff; --blue-10:#0081f1; --blue-11:#006adc; --blue-12:#00254d;
+
+  /* Indigo */
+  --indigo-1:#fdfdfe; --indigo-2:#f8f8ff; --indigo-3:#edf2fe; --indigo-4:#e1e9ff;
+  --indigo-5:#d2deff; --indigo-6:#bfceff; --indigo-7:#a5b5f8; --indigo-8:#8799f0;
+  --indigo-9:#3e63dd; --indigo-10:#3a5ccc; --indigo-11:#3451b2; --indigo-12:#101d46;
+
+  /* Violet */
+  --violet-1:#fdfcfe; --violet-2:#faf8ff; --violet-3:#f2effe; --violet-4:#e9e4ff;
+  --violet-5:#ddd5ff; --violet-6:#cec2f9; --violet-7:#bcacf5; --violet-8:#a48ee8;
+  --violet-9:#6e56cf; --violet-10:#664dcb; --violet-11:#5746af; --violet-12:#201047;
+
+  /* Purple */
+  --purple-1:#fefcfe; --purple-2:#fbf7fe; --purple-3:#f7edfe; --purple-4:#f2e2fc;
+  --purple-5:#ebd4f8; --purple-6:#e0c4f4; --purple-7:#d1afec; --purple-8:#be93e4;
+  --purple-9:#8e4ec6; --purple-10:#8445bc; --purple-11:#793aaf; --purple-12:#2b0e44;
+
+  /* Pink */
+  --pink-1:#fffcfe; --pink-2:#fff7fc; --pink-3:#feeef8; --pink-4:#fce5f3;
+  --pink-5:#f9d8ec; --pink-6:#f4c6e4; --pink-7:#edadd7; --pink-8:#e38ec3;
+  --pink-9:#d6409f; --pink-10:#cf3897; --pink-11:#c2298a; --pink-12:#651249;
+
+  /* Crimson */
+  --crimson-1:#fffcfd; --crimson-2:#fff7fb; --crimson-3:#feecf4; --crimson-4:#fce0ec;
+  --crimson-5:#f9d1e4; --crimson-6:#f4bfd8; --crimson-7:#eca6c8; --crimson-8:#e185b0;
+  --crimson-9:#e93d82; --crimson-10:#e03177; --crimson-11:#d3216b; --crimson-12:#5c1030;
+}
+
+/* ============================================
+   SEMANTIC COLOR TOKENS
+   ============================================ */
+:root {
+  --color-primary:         var(--mauve-12);
+  --color-primary-hover:   var(--mauve-11);
+  --color-destructive:     var(--red-9);
+  --color-destructive-hover: var(--red-10);
+  --color-success:         var(--green-9);
+  --color-warning:         var(--yellow-9);
+  --color-info:            var(--blue-9);
+}
+
+/* ============================================
+   BASE RESET & DEFAULTS
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body1-size);
+  line-height: var(--text-body1-lh);
+  letter-spacing: var(--text-body1-ls);
+  font-weight: 400;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+/* ============================================
+   TYPOGRAPHY CLASSES
+   ============================================ */
+h1, .h1 {
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-lh);
+  letter-spacing: var(--text-h1-ls);
+  font-weight: 600;
+}
+h2, .h2 {
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-lh);
+  letter-spacing: var(--text-h2-ls);
+  font-weight: 600;
+}
+h3, .h3 {
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-lh);
+  letter-spacing: var(--text-h3-ls);
+  font-weight: 600;
+}
+h4, .h4 {
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-lh);
+  letter-spacing: var(--text-h4-ls);
+  font-weight: 600;
+}
+h5, .h5 {
+  font-size: var(--text-h5-size);
+  line-height: var(--text-h5-lh);
+  letter-spacing: var(--text-h5-ls);
+  font-weight: 600;
+}
+h6, .h6 {
+  font-size: var(--text-h6-size);
+  line-height: var(--text-h6-lh);
+  letter-spacing: var(--text-h6-ls);
+  font-weight: 600;
+}
+.subtitle-1 {
+  font-size: var(--text-subtitle1-size);
+  line-height: var(--text-subtitle1-lh);
+  font-weight: 600;
+}
+.subtitle-2 {
+  font-size: var(--text-subtitle2-size);
+  line-height: var(--text-subtitle2-lh);
+  font-weight: 600;
+}
+.body-1 {
+  font-size: var(--text-body1-size);
+  line-height: var(--text-body1-lh);
+  font-weight: 400;
+}
+.body-2 {
+  font-size: var(--text-body2-size);
+  line-height: var(--text-body2-lh);
+  font-weight: 400;
+}
+.caption {
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+.overline {
+  font-size: var(--text-overline-size);
+  line-height: var(--text-overline-lh);
+  letter-spacing: var(--text-overline-ls);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+/* Base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-body2-size);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius-small);
+  padding: var(--space-2) var(--space-4);
+  height: 36px;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Primary — Mauve 12 fill */
+.btn-primary {
+  background-color: var(--mauve-12);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background-color: var(--mauve-11);
+}
+
+/* Outlined — white fill, subtle border */
+.btn-outlined {
+  background-color: #ffffff;
+  color: var(--mauve-12);
+  border: 1px solid var(--mauve-6);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.btn-outlined:hover {
+  background-color: var(--mauve-2);
+  border-color: var(--mauve-7);
+}
+
+/* Ghost / Text */
+.btn-ghost {
+  background-color: transparent;
+  color: var(--mauve-11);
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+.btn-ghost:hover {
+  background-color: var(--mauve-3);
+  color: var(--mauve-12);
+}
+
+/* Sizes */
+.btn-sm {
+  height: 28px;
+  font-size: 12px;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-xsmall);
+}
+.btn-lg {
+  height: 44px;
+  font-size: var(--text-body1-size);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-medium);
+}
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.container-sm {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* Stack */
+.stack { display: flex; flex-direction: column; }
+.stack-2 { gap: var(--space-2); }
+.stack-3 { gap: var(--space-3); }
+.stack-4 { gap: var(--space-4); }
+.stack-6 { gap: var(--space-6); }
+.stack-8 { gap: var(--space-8); }
+
+/* Row */
+.row { display: flex; flex-direction: row; align-items: center; }
+.row-2 { gap: var(--space-2); }
+.row-3 { gap: var(--space-3); }
+.row-4 { gap: var(--space-4); }
+.row-6 { gap: var(--space-6); }
+
+/* ============================================
+   CARD
+   ============================================ */
+.card {
+  background: #ffffff;
+  border: 1px solid var(--mauve-5);
+  border-radius: var(--radius-medium);
+  padding: var(--space-6);
+}
+
+.card-sm {
+  padding: var(--space-4);
+  border-radius: var(--radius-small);
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+.input {
+  font-family: var(--font-sans);
+  font-size: var(--text-body2-size);
+  color: var(--color-text);
+  background: #ffffff;
+  border: 1px solid var(--mauve-6);
+  border-radius: var(--radius-small);
+  padding: 0 var(--space-3);
+  height: 36px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.input:focus {
+  border-color: var(--mauve-9);
+  box-shadow: 0 0 0 3px var(--mauve-4);
+}
+.input::placeholder {
+  color: var(--mauve-8);
+}
+
+.label {
+  font-size: var(--text-body2-size);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+  display: block;
+}
+
+/* ============================================
+   BADGE
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-caption-size);
+  font-weight: 600;
+  line-height: 1;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--mauve-3);
+  color: var(--mauve-11);
+}
+.badge-blue   { background: var(--blue-3);   color: var(--blue-11); }
+.badge-green  { background: var(--green-3);  color: var(--green-11); }
+.badge-red    { background: var(--red-3);    color: var(--red-11); }
+.badge-yellow { background: var(--yellow-3); color: var(--yellow-11); }
+.badge-violet { background: var(--violet-3); color: var(--violet-11); }
+
+/* ============================================
+   DIVIDER
+   ============================================ */
+.divider {
+  border: none;
+  border-top: 1px solid var(--mauve-5);
+  margin: var(--space-4) 0;
+}
+
+/* ============================================
+   PROTOTYPE ANNOTATION BAR
+   Visible only in prototype — not in production
+   ============================================ */
+.proto-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--mauve-12);
+  color: #ffffff;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  padding: var(--space-2) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  z-index: 9999;
+}
+.proto-bar-label {
+  background: var(--violet-9);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
