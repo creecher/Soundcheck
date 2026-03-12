@@ -1,68 +1,104 @@
 # 🎙 Soundcheck
 
-A local-first prototyping environment for rapid design exploration.
-Built with HTML, CSS, JS, Tailwind, and Font Awesome Pro.
-Powered by Claude Code.
+Chorus's design prototype playground — a local-first environment for rapid wireframing and stakeholder reviews.
+Built with HTML, CSS, JS, Tailwind, and Font Awesome Pro. Powered by Claude Code.
+
+> **Prototypes here are not production code.** They exist to communicate ideas clearly and get alignment fast.
 
 ---
 
-## Getting Started
+## First Time Setup
 
-### 1. Clone this repo
+Do this once when you first join the team.
+
+### 1. Install Claude Code
 ```bash
-git clone https://github.com/YOUR_USERNAME/soundcheck.git
-cd soundcheck
+npm install -g @anthropic-ai/claude-code
 ```
 
-### 2. Make scripts executable (first time only)
+### 2. Clone the repo
+```bash
+git clone https://github.com/creecher/Soundcheck.git
+cd Soundcheck
+```
+
+### 3. Make the scripts executable
 ```bash
 chmod +x new-prototype.sh save-prototype.sh
 ```
 
-### 3. Start a new prototype
+
+---
+
+## Starting a New Prototype
+
+### 1. Create a new branch
 ```bash
 ./new-prototype.sh your-feature-name
 ```
+This pulls the latest from `main`, creates a `prototype/your-feature-name` branch, and opens VS Code.
 
-This will:
-- Pull the latest from `main`
-- Create a new branch `prototype/your-feature-name`
-- Open the project in VS Code
+### 2. Fill in your brief
+Open `BRIEF.md` and fill in the problem context — paste your Confluence requirements, describe the user flow, list the screens you need.
 
-### 4. Fill in your brief
-Open `BRIEF.md` and fill in the problem context before you start building.
-
-### 5. Open Claude Code and start building
+### 3. Open Claude Code
 ```bash
 claude
 ```
 
-Say: *"Read BRIEF.md and let's plan the prototype together before writing any code."*
+Start every session with this prompt:
+> *"Read CLAUDE.md and BRIEF.md, then let's plan this prototype together before you write any code."*
 
-### 6. Save and share
+Claude Code will read your design system rules and brief, ask clarifying questions, and help you plan before building anything.
+
+### 4. Build and iterate
+Describe changes, drop in screenshots, ask Claude to adjust. Keep it simple — fake what you don't need.
+
+### 5. Save and share
 ```bash
 ./save-prototype.sh
 ```
-
-This commits, pushes, and prints your live GitHub Pages URL.
+This commits, pushes, and prints your live GitHub Pages URL. Share the link with stakeholders — no Figma file needed.
 
 ---
 
 ## File Structure
 
 ```
-prototype-playground/
-├── index.html          ← base prototype template
+Soundcheck/
+├── index.html              ← base prototype template (start here)
+├── CLAUDE.md               ← persistent Claude Code design system rules
+├── BRIEF.md                ← fill this in before every prototype session
+├── new-prototype.sh        ← creates a new prototype branch
+├── save-prototype.sh       ← commits, pushes, prints live URL
+├── README.md               ← this file
 ├── css/
-│   └── theme.css       ← design tokens (DO NOT edit per-prototype)
+│   └── theme.css           ← design tokens — DO NOT edit per-prototype
 ├── js/
-│   └── app.js          ← prototype JS
-├── CLAUDE.md           ← persistent Claude Code context
-├── BRIEF.md            ← per-prototype problem brief (fill in before building)
-├── new-prototype.sh    ← creates a new prototype branch
-├── save-prototype.sh   ← commits, pushes, prints live URL
-└── README.md           ← this file
+│   ├── db.js               ← Supabase data layer — add your keys here
+│   └── app.js              ← prototype-specific logic
+└── data/
+    ├── schema.sql          ← Supabase table definitions
+    ├── seed.sql            ← Chorus mock data (clients, referrals, staff, etc.)
+    └── SUPABASE_SETUP.md   ← step-by-step Supabase setup guide
 ```
+
+---
+
+## Using Mock Data
+
+Soundcheck is connected to a real Supabase backend with Chorus-flavored mock data. Any prototype can query it directly.
+
+```javascript
+// In your prototype JS or browser console:
+const clients   = await db.clients.list();
+const highRisk  = await db.clients.getHighRisk();
+const referrals = await db.referrals.list();
+const summary   = await db.dashboard.summary();
+// → { activeClients: 7, todaysCalls: 2, pendingReferrals: 1, highRiskClients: 3 }
+```
+
+See `data/SUPABASE_SETUP.md` for the full setup guide and `js/db.js` for all available methods.
 
 ---
 
@@ -79,13 +115,14 @@ prototype-playground/
 ```html
 <h1>Heading 1</h1>
 <p class="body-1">Body text</p>
-<p class="caption">Caption</p>
-<span class="overline">Overline</span>
+<p class="body-2">Secondary text</p>
+<p class="caption">Caption / helper text</p>
+<span class="overline">Overline label</span>
 ```
 
 ### Cards
 ```html
-<div class="card">Content</div>
+<div class="card">Standard card</div>
 <div class="card card-sm">Compact card</div>
 ```
 
@@ -93,25 +130,32 @@ prototype-playground/
 ```html
 <span class="badge">Default</span>
 <span class="badge badge-green">Success</span>
-<span class="badge badge-red">Error</span>
+<span class="badge badge-red">Error / Crisis</span>
+<span class="badge badge-yellow">Warning</span>
+<span class="badge badge-blue">Info</span>
 ```
 
 ### Icons (Font Awesome Pro)
 ```html
 <i class="fa-regular fa-plus"></i>
 <i class="fa-regular fa-magnifying-glass"></i>
+<i class="fa-regular fa-phone"></i>
+<i class="fa-regular fa-circle-exclamation"></i>
 <i class="fa-solid fa-check"></i>
 ```
 
 ### Colors (CSS variables)
 ```css
-var(--mauve-12)   /* near-black, primary text */
-var(--mauve-9)    /* muted text */
-var(--mauve-6)    /* borders */
-var(--mauve-3)    /* subtle backgrounds */
-var(--blue-9)     /* info / link */
-var(--green-9)    /* success */
-var(--red-9)      /* destructive */
+var(--mauve-12)   /* near-black — primary text, primary button */
+var(--mauve-11)   /* dark gray — secondary text */
+var(--mauve-9)    /* mid gray — muted text */
+var(--mauve-6)    /* light gray — borders */
+var(--mauve-3)    /* near-white — subtle backgrounds */
+var(--blue-9)     /* info / links */
+var(--green-9)    /* success / completed */
+var(--red-9)      /* destructive / crisis */
+var(--yellow-9)   /* warning */
+var(--violet-9)   /* feature highlights */
 ```
 
 ---
@@ -119,7 +163,8 @@ var(--red-9)      /* destructive */
 ## Rules
 
 - These are **not production prototypes** — speed over perfection
-- One branch per prototype
-- `CLAUDE.md` and `theme.css` live on `main` and are inherited by every branch
-- Fill in `BRIEF.md` before every session — it makes Claude 10x more useful
+- One branch per prototype — branch off `main`, never commit directly to it
+- `CLAUDE.md` and `theme.css` live on `main` and are inherited by every branch — don't edit them per-prototype
+- Fill in `BRIEF.md` before every Claude Code session — it makes a huge difference
 - Share GitHub Pages links with stakeholders, not Figma files
+- When a prototype is done, leave the branch — it's the artifact
