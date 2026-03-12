@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backstage Pass — Soundcheck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/f628cf1eec.js" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0e0d12; --white: #ffffff; --ink: #1a1825; --mist: #f4f2f7; --line: #e8e5ee;
+      --violet: #6e56cf; --violet-light: #f2effe; --violet-mid: #cec2f9;
+      --green: #46a758; --red: #e5484d; --yellow: #ffe629; --blue: #0090ff; --orange: #f76b15;
+      --font: 'Figtree', sans-serif;
+      --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-full: 999px;
+    }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--black); color: var(--white); overflow-x: hidden; }
+
+    /* HERO */
+    .hero { position: relative; padding: 72px 48px 64px; overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(110,86,207,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(110,86,207,0.1) 1px, transparent 1px);
+      background-size: 40px 40px; animation: gridMove 20s linear infinite; pointer-events: none;
+    }
+    .hero::after { content: ''; position: absolute; top: -120px; right: -80px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(110,86,207,0.28) 0%, transparent 70%); pointer-events: none; }
+    @keyframes gridMove { 0% { transform: translateY(0); } 100% { transform: translateY(40px); } }
+    .hero-inner { position: relative; z-index: 1; max-width: 700px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(110,86,207,0.18); border: 1px solid rgba(110,86,207,0.35); border-radius: var(--r-full); padding: 5px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--violet-mid); margin-bottom: 22px; }
+    .hero h1 { font-size: 54px; font-weight: 900; line-height: 1.0; letter-spacing: -1.5px; color: var(--white); margin-bottom: 14px; }
+    .hero h1 span { background: linear-gradient(135deg, #a78bfa, #6e56cf, #3451b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 16px; line-height: 26px; color: rgba(255,255,255,0.5); max-width: 480px; }
+    .hero-meta { display: flex; align-items: center; gap: 24px; margin-top: 28px; }
+    .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+    .hero-stat-num { font-size: 22px; font-weight: 800; color: var(--white); letter-spacing: -0.5px; }
+    .hero-stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.3); }
+    .hero-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.1); }
+
+    /* TABS */
+    .tab-nav { background: var(--black); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 48px; display: flex; gap: 4px; position: sticky; top: 0; z-index: 100; }
+    .tab-btn { font-family: var(--font); font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.38); background: none; border: none; padding: 15px 16px; cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .tab-btn:hover { color: rgba(255,255,255,0.75); }
+    .tab-btn.active { color: var(--white); border-bottom-color: var(--violet); }
+
+    /* CONTENT */
+    .tab-content { display: none; padding: 48px; max-width: 920px; margin: 0 auto; }
+    .tab-content.active { display: block; }
+
+    /* SECTION LABEL */
+    .section-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.22); margin-bottom: 14px; margin-top: 44px; }
+    .section-label:first-child { margin-top: 0; }
+
+    /* TIP */
+    .tip { background: rgba(110,86,207,0.1); border: 1px solid rgba(110,86,207,0.22); border-radius: var(--r-md); padding: 15px 20px; font-size: 13px; color: rgba(255,255,255,0.55); line-height: 22px; margin-bottom: 32px; display: flex; gap: 12px; align-items: flex-start; }
+    .tip i { color: var(--violet-mid); margin-top: 2px; flex-shrink: 0; }
+    .tip code { background: rgba(110,86,207,0.22); border: 1px solid rgba(110,86,207,0.28); border-radius: 5px; padding: 1px 7px; font-size: 12px; color: #c4b5fd; font-family: 'Menlo', monospace; }
+
+    /* PROMPT CARDS */
+    .prompt-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-lg); padding: 22px 26px; transition: border-color 0.2s, background 0.2s; margin-bottom: 10px; }
+    .prompt-card:hover { background: rgba(255,255,255,0.055); border-color: rgba(110,86,207,0.35); }
+    .prompt-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 5px; }
+    .prompt-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: var(--r-full); border: 1px solid; flex-shrink: 0; }
+    .tag-violet  { color: #c4b5fd; border-color: rgba(110,86,207,0.4); background: rgba(110,86,207,0.14); }
+    .tag-green   { color: #86efac; border-color: rgba(70,167,88,0.4);  background: rgba(70,167,88,0.12); }
+    .tag-blue    { color: #93c5fd; border-color: rgba(0,144,255,0.4);  background: rgba(0,144,255,0.12); }
+    .tag-orange  { color: #fdba74; border-color: rgba(247,107,21,0.4); background: rgba(247,107,21,0.12); }
+    .tag-red     { color: #fca5a5; border-color: rgba(229,72,77,0.4);  background: rgba(229,72,77,0.12); }
+    .tag-yellow  { color: #fde68a; border-color: rgba(255,230,41,0.4); background: rgba(255,230,41,0.1); }
+    .prompt-card h3 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+    .prompt-card > p { font-size: 13px; color: rgba(255,255,255,0.42); margin-bottom: 14px; line-height: 20px; }
+    .prompt-box { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r-sm); padding: 15px; font-family: 'Menlo', 'Monaco', monospace; font-size: 12px; line-height: 20px; color: rgba(255,255,255,0.62); white-space: pre-wrap; word-break: break-word; position: relative; }
+    .copy-btn { position: absolute; top: 10px; right: 10px; font-family: var(--font); font-size: 11px; font-weight: 700; background: rgba(110,86,207,0.75); color: #fff; border: none; border-radius: 6px; padding: 4px 11px; cursor: pointer; transition: background 0.15s; letter-spacing: 0.3px; }
+    .copy-btn:hover { background: var(--violet); }
+    .copy-btn.copied { background: #297c3b; }
+
+    /* DB CARDS */
+    .db-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-lg); overflow: hidden; transition: border-color 0.2s; margin-bottom: 10px; }
+    .db-card:hover { border-color: rgba(255,255,255,0.14); }
+    .db-card-header { padding: 18px 22px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .db-icon { width: 38px; height: 38px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .db-card-header h3 { font-size: 14px; font-weight: 700; color: var(--white); }
+    .db-card-header p { font-size: 12px; color: rgba(255,255,255,0.38); margin-top: 2px; }
+    .db-fields { padding: 14px 22px; display: flex; flex-wrap: wrap; gap: 7px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .db-field { font-size: 11px; font-family: 'Menlo', monospace; border-radius: 5px; padding: 3px 8px; border: 1px solid; color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); }
+    .db-field.key { color: #c4b5fd; border-color: rgba(110,86,207,0.4); background: rgba(110,86,207,0.12); }
+    .db-field.hot { color: #93c5fd; border-color: rgba(0,144,255,0.32); background: rgba(0,144,255,0.09); }
+    .db-methods { padding: 13px 22px 16px; background: rgba(0,0,0,0.2); }
+    .db-methods-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.22); margin-bottom: 9px; }
+    .db-method-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .db-method { font-size: 11px; font-family: 'Menlo', monospace; color: #86efac; background: rgba(70,167,88,0.1); border: 1px solid rgba(70,167,88,0.22); border-radius: 5px; padding: 4px 10px; cursor: pointer; transition: background 0.12s; }
+    .db-method:hover { background: rgba(70,167,88,0.2); }
+    .ids-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-lg); padding: 22px; margin-top: 10px; }
+    .ids-group { margin-bottom: 18px; }
+    .ids-group:last-child { margin-bottom: 0; }
+    .ids-group-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.22); margin-bottom: 9px; }
+    .ids-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .ids-chip { font-size: 12px; font-family: 'Menlo', monospace; color: rgba(255,255,255,0.58); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px 11px; cursor: pointer; transition: background 0.1s; }
+    .ids-chip:hover { background: rgba(255,255,255,0.1); }
+
+    /* COLORS */
+    .semantic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 9px; margin-bottom: 40px; }
+    .sem-chip { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-md); padding: 13px 15px; display: flex; align-items: center; gap: 11px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+    .sem-chip:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); }
+    .sem-swatch { width: 34px; height: 34px; border-radius: 7px; flex-shrink: 0; }
+    .sem-chip-label { font-size: 12px; font-weight: 600; color: var(--white); line-height: 1.3; }
+    .sem-chip-var { font-size: 10px; font-family: 'Menlo', monospace; color: rgba(255,255,255,0.32); margin-top: 2px; }
+
+    /* Scale groups */
+    .scale-group { margin-bottom: 36px; }
+    .scale-group-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.22); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .scale-section { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    .scale-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); width: 72px; flex-shrink: 0; }
+    .scale-row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; flex: 1; }
+    .scale-swatch { aspect-ratio: 1; border-radius: 5px; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; position: relative; }
+    .scale-swatch:hover { transform: scale(1.2); box-shadow: 0 3px 12px rgba(0,0,0,0.5); z-index: 2; }
+
+    /* TYPE */
+    .type-table { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-lg); overflow: hidden; }
+    .type-row { display: flex; align-items: center; padding: 18px 26px; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 22px; cursor: pointer; transition: background 0.12s; }
+    .type-row:last-child { border-bottom: none; }
+    .type-row:hover { background: rgba(255,255,255,0.03); }
+    .type-meta { width: 170px; flex-shrink: 0; }
+    .type-name { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55); }
+    .type-specs { font-size: 10px; font-family: 'Menlo', monospace; color: rgba(255,255,255,0.28); margin-top: 3px; }
+    .type-class-pill { display: inline-block; margin-top: 5px; font-size: 10px; font-family: 'Menlo', monospace; background: rgba(110,86,207,0.18); border: 1px solid rgba(110,86,207,0.28); border-radius: 4px; padding: 1px 7px; color: #c4b5fd; }
+    .type-preview { color: var(--white); flex: 1; }
+    .radius-row { display: flex; gap: 22px; flex-wrap: wrap; padding: 28px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-lg); align-items: flex-end; }
+    .radius-item { text-align: center; }
+    .radius-box { width: 68px; height: 68px; border: 2px solid rgba(110,86,207,0.55); background: rgba(110,86,207,0.08); margin: 0 auto 9px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+    .radius-box:hover { border-color: var(--violet); background: rgba(110,86,207,0.14); }
+    .radius-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55); }
+    .radius-val { font-size: 10px; font-family: 'Menlo', monospace; color: rgba(255,255,255,0.28); margin-top: 2px; }
+    .radius-var { font-size: 10px; font-family: 'Menlo', monospace; color: #c4b5fd; margin-top: 1px; }
+
+    /* TOAST — mini pill, bottom center */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(12px) scale(0.95);
+      background: rgba(30,28,38,0.95);
+      border: 1px solid rgba(110,86,207,0.45);
+      backdrop-filter: blur(12px);
+      color: #c4b5fd;
+      font-size: 12px; font-weight: 700;
+      padding: 8px 16px 8px 12px;
+      border-radius: var(--r-full);
+      opacity: 0;
+      transition: opacity 0.18s, transform 0.18s;
+      pointer-events: none;
+      z-index: 9999;
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    .toast-icon { font-size: 13px; color: #86efac; }
+
+    /* Fade-in */
+    .prompt-card, .db-card { opacity: 0; transform: translateY(10px); animation: fadeUp 0.28s forwards; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .prompt-card:nth-child(1),.db-card:nth-child(1){animation-delay:.04s}
+    .prompt-card:nth-child(2),.db-card:nth-child(2){animation-delay:.08s}
+    .prompt-card:nth-child(3),.db-card:nth-child(3){animation-delay:.12s}
+    .prompt-card:nth-child(4),.db-card:nth-child(4){animation-delay:.16s}
+    .prompt-card:nth-child(5),.db-card:nth-child(5){animation-delay:.2s}
+    .prompt-card:nth-child(6),.db-card:nth-child(6){animation-delay:.24s}
+    .prompt-card:nth-child(7){animation-delay:.28s}
+    .prompt-card:nth-child(8){animation-delay:.32s}
+    .prompt-card:nth-child(9){animation-delay:.36s}
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i class="fa-solid fa-ticket"></i> Soundcheck · Chorus Design</div>
+    <h1>Backstage<br><span>Pass.</span></h1>
+    <p>Everything you need to build Chorus prototypes fast. Copy prompts, explore data, reference design tokens.</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><span class="hero-stat-num">9</span><span class="hero-stat-label">Prompts</span></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><span class="hero-stat-num">6</span><span class="hero-stat-label">DB Tables</span></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><span class="hero-stat-num">31</span><span class="hero-stat-label">Color Scales</span></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><span class="hero-stat-num">7</span><span class="hero-stat-label">Clients seeded</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('prompts',this)"><i class="fa-regular fa-copy"></i>Claude Prompts</button>
+  <button class="tab-btn" onclick="showTab('data',this)"><i class="fa-regular fa-database"></i>Data Reference</button>
+  <button class="tab-btn" onclick="showTab('colors',this)"><i class="fa-regular fa-palette"></i>Colors</button>
+  <button class="tab-btn" onclick="showTab('type',this)"><i class="fa-regular fa-text-size"></i>Typography</button>
+</nav>
+
+<!-- ═══════════════ PROMPTS ═══════════════ -->
+<div id="tab-prompts" class="tab-content active">
+  <div class="tip"><i class="fa-regular fa-lightbulb"></i><span>Fill in <code>BRIEF.md</code> first. Open Claude Code, say <code>"Read CLAUDE.md and BRIEF.md"</code> — then paste the prompt that matches what you're building. Click <strong>Copy</strong> on any card.</span></div>
+
+  <div class="section-label">Start every session</div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>The magic starting prompt</h3><p>Use this at the beginning of every Claude Code session, before anything else.</p></div><span class="prompt-tag tag-violet">Session Opener</span></div>
+    <div class="prompt-box" id="p-start">Read CLAUDE.md and BRIEF.md, then let's plan this prototype together before you write any code. Ask me any clarifying questions you need.<button class="copy-btn" onclick="copyPrompt('p-start',this)">Copy</button></div>
+  </div>
+
+  <div class="section-label">Building screens</div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Build a dashboard with live data</h3><p>Use when you need a summary screen with stat cards and program overviews.</p></div><span class="prompt-tag tag-blue">Dashboard</span></div>
+    <div class="prompt-box" id="p-dashboard">Build a dashboard screen using our design system. Include:
+- Four stat cards from db.dashboard.summary()
+- A program overview section from db.programs.list()
+- Use shadcn/ui Card, Badge components
+- Colors only from Radix CSS variables — no hex values
+- Use Figtree font, Tailwind spacing<button class="copy-btn" onclick="copyPrompt('p-dashboard',this)">Copy</button></div>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Build a client list view</h3><p>Use when you need a filterable list with risk indicators.</p></div><span class="prompt-tag tag-green">Client List</span></div>
+    <div class="prompt-box" id="p-clients">Build a client list view that:
+- Loads clients from db.clients.list()
+- Shows name, program, risk level Badge, assigned clinician
+- shadcn/ui Input for search, filters client-side
+- High risk clients get a red Badge variant="destructive"
+- shadcn/ui Card for each row or as the container<button class="copy-btn" onclick="copyPrompt('p-clients',this)">Copy</button></div>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Build a client detail view</h3><p>Use when you need a single client's full clinical record.</p></div><span class="prompt-tag tag-green">Client Detail</span></div>
+    <div class="prompt-box" id="p-detail">Build a client detail view for 'CL-005' that:
+- Loads via db.clients.get('CL-005')
+- Shows name, pronouns, DOB, phone, clinician, insurance in a shadcn/ui Card
+- Tabs (shadcn/ui Tabs) for: Diagnoses, Medications, Allergies, Care Journey
+- Each tab loads from db.diagnoses / db.medications / db.allergies / db.journey
+- Use Radix color variables for risk-level badges<button class="copy-btn" onclick="copyPrompt('p-detail',this)">Copy</button></div>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Build a referral management screen</h3><p>Use when prototyping the closed-loop referral workflow.</p></div><span class="prompt-tag tag-orange">Referrals</span></div>
+    <div class="prompt-box" id="p-referrals">Build a referral management screen:
+- Loads db.referrals.list(), shows pending/in-progress/completed counts in Cards
+- Table rows (shadcn/ui Table) with client name, from→to path, urgency Badge, status
+- shadcn/ui Dialog for "+ Create Referral" form
+- Form: client select, from/to program, urgency, reason, notes
+- On submit: db.referrals.create({...})<button class="copy-btn" onclick="copyPrompt('p-referrals',this)">Copy</button></div>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Build a warm line call log</h3><p>Use when prototyping crisis line or call management features.</p></div><span class="prompt-tag tag-red">Warm Line</span></div>
+    <div class="prompt-box" id="p-warmline">Build a warm line call log:
+- Loads db.calls.list(), shows each call in a Card row
+- Priority Badge: routine=default, urgent=warning, crisis=destructive
+- Crisis calls: red Alert (shadcn/ui Alert) shown below the row
+- shadcn/ui Dialog for "+ Log New Call"
+- Form: caller name, phone, relationship, priority, summary, outcome, follow-up Switch
+- On submit: db.calls.create({...})<button class="copy-btn" onclick="copyPrompt('p-warmline',this)">Copy</button></div>
+  </div>
+
+  <div class="section-label">Common UI patterns</div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Add a sidebar navigation</h3><p>Consistent nav shell for any prototype screen.</p></div><span class="prompt-tag tag-violet">Navigation</span></div>
+    <div class="prompt-box" id="p-nav">Add a left sidebar navigation:
+- "One Chorus" app name + "Mental Health Program Operations" subtitle
+- Nav items: Dashboard, Warm Line, Clients, Referrals — each with fa-regular icon
+- Active item highlighted with var(--blue-9) accent
+- Top bar: shadcn/ui Input for search, program name, settings icon, today's date
+- Sidebar background: var(--mauve-2), borders: var(--mauve-6), width: 180px<button class="copy-btn" onclick="copyPrompt('p-nav',this)">Copy</button></div>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Add an empty state</h3><p>For lists or sections that might return no data.</p></div><span class="prompt-tag tag-yellow">Empty State</span></div>
+    <div class="prompt-box" id="p-empty">Add an empty state when there is no data:
+- fa-regular icon centered, contextually appropriate
+- Short heading, one-line supporting description
+- Optional shadcn/ui Button (variant="default") for a primary action
+- Icon color: var(--mauve-9), text: var(--mauve-11)<button class="copy-btn" onclick="copyPrompt('p-empty',this)">Copy</button></div>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-card-top"><div><h3>Fix spacing or layout</h3><p>When something feels too tight or too loose.</p></div><span class="prompt-tag tag-violet">Iteration</span></div>
+    <div class="prompt-box" id="p-spacing">The [section name] feels too cramped / spread out. Adjust spacing using Tailwind spacing utilities (p-2 through p-16, gap-2 through gap-8) — no arbitrary pixel values. Keep all other styles unchanged.<button class="copy-btn" onclick="copyPrompt('p-spacing',this)">Copy</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════ DATA ═══════════════ -->
+<div id="tab-data" class="tab-content">
+  <div class="tip"><i class="fa-regular fa-lightbulb"></i><span>Tell Claude which table you need and what to show. Click any <span style="color:#86efac;font-weight:700">green method</span> to copy it. <span style="color:#c4b5fd">Purple</span> = ID fields. <span style="color:#93c5fd">Blue</span> = most-used fields.</span></div>
+
+  <div class="section-label">Tables</div>
+  <div class="db-card"><div class="db-card-header"><div class="db-icon" style="background:rgba(0,144,255,.14);color:#93c5fd"><i class="fa-regular fa-user"></i></div><div><h3>clients</h3><p>People receiving care — the core record</p></div></div><div class="db-fields"><span class="db-field key">id</span><span class="db-field hot">first_name</span><span class="db-field hot">last_name</span><span class="db-field">preferred_name</span><span class="db-field">pronouns</span><span class="db-field">dob</span><span class="db-field">age</span><span class="db-field hot">phone_primary</span><span class="db-field hot">assigned_clinician</span><span class="db-field hot">program_id</span><span class="db-field hot">risk_level</span><span class="db-field">insurance_type</span><span class="db-field">ai_summary</span></div><div class="db-methods"><div class="db-methods-label">Methods</div><div class="db-method-list"><span class="db-method" onclick="copyText('await db.clients.list()',this)">db.clients.list()</span><span class="db-method" onclick="copyText('await db.clients.get(\'CL-001\')',this)">db.clients.get('CL-001')</span><span class="db-method" onclick="copyText('await db.clients.getHighRisk()',this)">db.clients.getHighRisk()</span><span class="db-method" onclick="copyText('await db.clients.list(\'prog-warm-line\')',this)">db.clients.list('prog-warm-line')</span><span class="db-method" onclick="copyText('await db.clients.search(\'rodriguez\')',this)">db.clients.search('...')</span></div></div></div>
+  <div class="db-card"><div class="db-card-header"><div class="db-icon" style="background:rgba(110,86,207,.14);color:#c4b5fd"><i class="fa-regular fa-arrow-right-arrow-left"></i></div><div><h3>referrals</h3><p>Client handoffs between programs — the closed loop</p></div></div><div class="db-fields"><span class="db-field key">id</span><span class="db-field hot">client_id</span><span class="db-field hot">from_program</span><span class="db-field hot">to_program</span><span class="db-field hot">urgency</span><span class="db-field hot">status</span><span class="db-field">reason</span><span class="db-field">notes</span><span class="db-field">created_by</span><span class="db-field">created_at</span></div><div class="db-methods"><div class="db-methods-label">Methods</div><div class="db-method-list"><span class="db-method" onclick="copyText('await db.referrals.list()',this)">db.referrals.list()</span><span class="db-method" onclick="copyText('await db.referrals.pending()',this)">db.referrals.pending()</span><span class="db-method" onclick="copyText('await db.referrals.inProgress()',this)">db.referrals.inProgress()</span><span class="db-method" onclick="copyText('await db.referrals.forClient(\'CL-001\')',this)">db.referrals.forClient('CL-001')</span><span class="db-method" onclick="copyText('await db.referrals.create({ client_id: \'CL-001\', from_program: \'prog-warm-line\', to_program: \'prog-central-intake\', urgency: \'routine\', reason: \'Assessment needed\', created_by: \'staff-001\' })',this)">db.referrals.create({...})</span></div></div></div>
+  <div class="db-card"><div class="db-card-header"><div class="db-icon" style="background:rgba(70,167,88,.14);color:#86efac"><i class="fa-regular fa-phone"></i></div><div><h3>warm_line_calls</h3><p>Incoming calls logged by care coordinators</p></div></div><div class="db-fields"><span class="db-field key">id</span><span class="db-field hot">client_id</span><span class="db-field hot">caller_name</span><span class="db-field">phone</span><span class="db-field hot">relationship</span><span class="db-field hot">priority</span><span class="db-field">summary</span><span class="db-field">outcome</span><span class="db-field hot">follow_up_required</span><span class="db-field">handled_by</span><span class="db-field">duration_minutes</span></div><div class="db-methods"><div class="db-methods-label">Methods</div><div class="db-method-list"><span class="db-method" onclick="copyText('await db.calls.list()',this)">db.calls.list()</span><span class="db-method" onclick="copyText('await db.calls.byPriority(\'crisis\')',this)">db.calls.byPriority('crisis')</span><span class="db-method" onclick="copyText('await db.calls.needsFollowUp()',this)">db.calls.needsFollowUp()</span><span class="db-method" onclick="copyText('await db.calls.create({ caller_name: \'Jane Doe\', phone: \'(555)000-0000\', relationship: \'self\', priority: \'routine\', summary: \'...\', follow_up_required: true, handled_by: \'staff-001\', duration_minutes: 20 })',this)">db.calls.create({...})</span></div></div></div>
+  <div class="db-card"><div class="db-card-header"><div class="db-icon" style="background:rgba(247,107,21,.14);color:#fdba74"><i class="fa-regular fa-user-doctor"></i></div><div><h3>staff</h3><p>Care coordinators, clinicians, crisis specialists</p></div></div><div class="db-fields"><span class="db-field key">id</span><span class="db-field hot">name</span><span class="db-field hot">role</span><span class="db-field">title</span><span class="db-field hot">program_id</span><span class="db-field">email</span></div><div class="db-methods"><div class="db-methods-label">Methods</div><div class="db-method-list"><span class="db-method" onclick="copyText('await db.staff.list()',this)">db.staff.list()</span><span class="db-method" onclick="copyText('await db.staff.get(\'staff-001\')',this)">db.staff.get('staff-001')</span><span class="db-method" onclick="copyText('await db.staff.byProgram(\'prog-warm-line\')',this)">db.staff.byProgram('...')</span></div></div></div>
+  <div class="db-card"><div class="db-card-header"><div class="db-icon" style="background:rgba(18,165,148,.14);color:#5eead4"><i class="fa-regular fa-building"></i></div><div><h3>programs</h3><p>Warm Line · Central Intake · Care Facility</p></div></div><div class="db-fields"><span class="db-field key">id</span><span class="db-field hot">name</span><span class="db-field">description</span><span class="db-field hot">active_client_count</span></div><div class="db-methods"><div class="db-methods-label">Methods</div><div class="db-method-list"><span class="db-method" onclick="copyText('await db.programs.list()',this)">db.programs.list()</span><span class="db-method" onclick="copyText('await db.programs.get(\'prog-warm-line\')',this)">db.programs.get('...')</span></div></div></div>
+  <div class="db-card"><div class="db-card-header"><div class="db-icon" style="background:rgba(229,72,77,.14);color:#fca5a5"><i class="fa-regular fa-gauge"></i></div><div><h3>dashboard helpers</h3><p>Summary counts for overview screens</p></div></div><div class="db-fields"><span class="db-field hot">activeClients</span><span class="db-field hot">todaysCalls</span><span class="db-field hot">pendingReferrals</span><span class="db-field hot">highRiskClients</span></div><div class="db-methods"><div class="db-methods-label">Methods</div><div class="db-method-list"><span class="db-method" onclick="copyText('await db.dashboard.summary()',this)">db.dashboard.summary()</span></div></div></div>
+
+  <div class="section-label">Known IDs — paste directly into prompts</div>
+  <div class="ids-card">
+    <div class="ids-group"><div class="ids-group-label">Clients</div><div class="ids-chips"><span class="ids-chip" onclick="copyText('CL-001',this)">CL-001 · Michael Rodriguez</span><span class="ids-chip" onclick="copyText('CL-002',this)">CL-002 · Maria Rodriguez</span><span class="ids-chip" onclick="copyText('CL-003',this)">CL-003 · Jennifer Lee</span><span class="ids-chip" onclick="copyText('CL-004',this)">CL-004 · Robert Thompson</span><span class="ids-chip" onclick="copyText('CL-005',this)">CL-005 · Carlos Sanchez</span><span class="ids-chip" onclick="copyText('CL-006',this)">CL-006 · Linda Garcia</span><span class="ids-chip" onclick="copyText('CL-007',this)">CL-007 · Sarah Johnson</span></div></div>
+    <div class="ids-group"><div class="ids-group-label">Staff</div><div class="ids-chips"><span class="ids-chip" onclick="copyText('staff-001',this)">staff-001 · Mark Thompson</span><span class="ids-chip" onclick="copyText('staff-002',this)">staff-002 · Lisa Martinez</span><span class="ids-chip" onclick="copyText('staff-003',this)">staff-003 · Jane Smith</span><span class="ids-chip" onclick="copyText('staff-004',this)">staff-004 · Dr. Emily Chen</span></div></div>
+    <div class="ids-group"><div class="ids-group-label">Programs</div><div class="ids-chips"><span class="ids-chip" onclick="copyText('prog-warm-line',this)">prog-warm-line</span><span class="ids-chip" onclick="copyText('prog-central-intake',this)">prog-central-intake</span><span class="ids-chip" onclick="copyText('prog-care-facility',this)">prog-care-facility</span></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ COLORS ═══════════════ -->
+<div id="tab-colors" class="tab-content">
+  <div class="tip"><i class="fa-regular fa-lightbulb"></i><span>Always use CSS variable names in prompts — never hex. E.g. <code>"use var(--red-9) for the crisis badge"</code>. Click any swatch or chip to copy the variable name.</span></div>
+  <div class="section-label">Semantic tokens — use these first</div>
+  <div class="semantic-grid" id="sem-grid"></div>
+  <div class="section-label">All 31 Radix scales</div>
+  <div id="scale-grid"></div>
+</div>
+
+<!-- ═══════════════ TYPE ═══════════════ -->
+<div id="tab-type" class="tab-content">
+  <div class="tip"><i class="fa-regular fa-lightbulb"></i><span>Never set font sizes manually — use the class or element. E.g. <code>"use .body-2 for the description"</code>. Click any row to copy its class name.</span></div>
+  <div class="section-label">Type scale — Figtree</div>
+  <div class="type-table">
+    <div class="type-row" onclick="copyText('h1',this)"><div class="type-meta"><div class="type-name">Heading 1</div><div class="type-specs">44px · 48px · -0.44px · 600</div><div class="type-class-pill">h1</div></div><div class="type-preview" style="font-size:38px;font-weight:900;letter-spacing:-1px;line-height:1">Heading one</div></div>
+    <div class="type-row" onclick="copyText('h2',this)"><div class="type-meta"><div class="type-name">Heading 2</div><div class="type-specs">36px · 44px · -0.19px · 600</div><div class="type-class-pill">h2</div></div><div class="type-preview" style="font-size:30px;font-weight:800;letter-spacing:-0.5px">Heading two</div></div>
+    <div class="type-row" onclick="copyText('h3',this)"><div class="type-meta"><div class="type-name">Heading 3</div><div class="type-specs">32px · 40px · -0.16px · 600</div><div class="type-class-pill">h3</div></div><div class="type-preview" style="font-size:24px;font-weight:800;letter-spacing:-0.3px">Heading three</div></div>
+    <div class="type-row" onclick="copyText('h4',this)"><div class="type-meta"><div class="type-name">Heading 4</div><div class="type-specs">28px · 36px · -0.14px · 600</div><div class="type-class-pill">h4</div></div><div class="type-preview" style="font-size:20px;font-weight:700;letter-spacing:-0.2px">Heading four</div></div>
+    <div class="type-row" onclick="copyText('h5',this)"><div class="type-meta"><div class="type-name">Heading 5</div><div class="type-specs">24px · 32px · -0.1px · 600</div><div class="type-class-pill">h5</div></div><div class="type-preview" style="font-size:17px;font-weight:700">Heading five</div></div>
+    <div class="type-row" onclick="copyText('h6',this)"><div class="type-meta"><div class="type-name">Heading 6</div><div class="type-specs">18px · 24px · -0.06px · 600</div><div class="type-class-pill">h6</div></div><div class="type-preview" style="font-size:14px;font-weight:700">Heading six</div></div>
+    <div class="type-row" onclick="copyText('.subtitle-1',this)"><div class="type-meta"><div class="type-name">Subtitle 1</div><div class="type-specs">16px · 24px · 0 · 600</div><div class="type-class-pill">.subtitle-1</div></div><div class="type-preview" style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.8)">Subtitle — emphasis in body content</div></div>
+    <div class="type-row" onclick="copyText('.subtitle-2',this)"><div class="type-meta"><div class="type-name">Subtitle 2</div><div class="type-specs">14px · 20px · 0 · 600</div><div class="type-class-pill">.subtitle-2</div></div><div class="type-preview" style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7)">Subtitle two — smaller emphasis</div></div>
+    <div class="type-row" onclick="copyText('.body-1',this)"><div class="type-meta"><div class="type-name">Body 1</div><div class="type-specs">16px · 24px · 0 · 400</div><div class="type-class-pill">.body-1</div></div><div class="type-preview" style="font-size:15px;font-weight:400;color:rgba(255,255,255,0.62)">Body text — default style for primary reading</div></div>
+    <div class="type-row" onclick="copyText('.body-2',this)"><div class="type-meta"><div class="type-name">Body 2</div><div class="type-specs">14px · 20px · 0 · 400</div><div class="type-class-pill">.body-2</div></div><div class="type-preview" style="font-size:13px;font-weight:400;color:rgba(255,255,255,0.52)">Body two — secondary content and descriptions</div></div>
+    <div class="type-row" onclick="copyText('.caption',this)"><div class="type-meta"><div class="type-name">Caption</div><div class="type-specs">12px · 14px · 0 · 400</div><div class="type-class-pill">.caption</div></div><div class="type-preview" style="font-size:12px;font-weight:400;color:rgba(255,255,255,0.38)">Caption — helper text, timestamps, fine print</div></div>
+    <div class="type-row" onclick="copyText('.overline',this)"><div class="type-meta"><div class="type-name">Overline</div><div class="type-specs">14px · 16px · 1.2px · 600</div><div class="type-class-pill">.overline</div></div><div class="type-preview" style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.38)">OVERLINE TEXT</div></div>
+  </div>
+
+  <div class="section-label" style="margin-top:36px">Border radius</div>
+  <div class="radius-row">
+    <div class="radius-item"><div class="radius-box" style="border-radius:4px" onclick="copyText('var(--radius-border)',this)"></div><div class="radius-label">Border</div><div class="radius-val">4px</div><div class="radius-var">--radius-border</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:8px" onclick="copyText('var(--radius-xsmall)',this)"></div><div class="radius-label">XSmall</div><div class="radius-val">8px</div><div class="radius-var">--radius-xsmall</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:12px" onclick="copyText('var(--radius-small)',this)"></div><div class="radius-label">Small</div><div class="radius-val">12px</div><div class="radius-var">--radius-small</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:16px" onclick="copyText('var(--radius-medium)',this)"></div><div class="radius-label">Medium</div><div class="radius-val">16px</div><div class="radius-var">--radius-medium</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:24px" onclick="copyText('var(--radius-large)',this)"></div><div class="radius-label">Large</div><div class="radius-val">24px</div><div class="radius-var">--radius-large</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:999px" onclick="copyText('var(--radius-full)',this)"></div><div class="radius-label">Full</div><div class="radius-val">999px</div><div class="radius-var">--radius-full</div></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fa-solid fa-check toast-icon"></i><span id="toast-msg">Copied</span></div>
+
+<script>
+const ALL_RADIX_SCALES = [{"name": "Gray", "prefix": "gray", "colors": ["#fcfcfc", "#f9f9f9", "#f0f0f0", "#e8e8e8", "#e0e0e0", "#d9d9d9", "#cecece", "#bbbbbb", "#8d8d8d", "#838383", "#646464", "#202020"]}, {"name": "Mauve", "prefix": "mauve", "colors": ["#fdfcfd", "#faf9fb", "#f2eff3", "#eae7ec", "#e3dfe6", "#dbd8e0", "#d0cdd7", "#bcbac7", "#8e8c99", "#84828e", "#65636d", "#211f26"]}, {"name": "Slate", "prefix": "slate", "colors": ["#fcfcfd", "#f9f9fb", "#f0f0f3", "#e8e8ec", "#e0e1e6", "#d9d9e0", "#cdced6", "#b9bbc6", "#8b8d98", "#80838d", "#60646c", "#1c2024"]}, {"name": "Sage", "prefix": "sage", "colors": ["#fbfdfc", "#f7f9f8", "#eef1f0", "#e6e9e8", "#dfe2e0", "#d7dad9", "#cbcfcd", "#b8bcba", "#868e8b", "#7c8481", "#5f6563", "#1a211e"]}, {"name": "Olive", "prefix": "olive", "colors": ["#fcfdfc", "#f8faf8", "#eff1ef", "#e7e9e7", "#dfe2df", "#d7dad7", "#cccfcc", "#b9bcb8", "#898e87", "#7f847d", "#60655f", "#1d211c"]}, {"name": "Sand", "prefix": "sand", "colors": ["#fdfdfc", "#f9f9f8", "#f1f0ef", "#e9e8e6", "#e2e1de", "#dad9d6", "#cfceca", "#bcbbb5", "#8d8d86", "#82827c", "#63635e", "#21201c"]}, {"name": "Tomato", "prefix": "tomato", "colors": ["#fffcfc", "#fff8f7", "#feebe7", "#ffdcd3", "#ffcdc2", "#fdbdaf", "#f5a898", "#ec8e7b", "#e54d2e", "#dd4425", "#d13415", "#5c271f"]}, {"name": "Red", "prefix": "red", "colors": ["#fffcfc", "#fff7f7", "#feebec", "#ffdbdc", "#ffcdce", "#fdbdbe", "#f4a9aa", "#eb8e90", "#e5484d", "#dc3e42", "#ce2c31", "#641723"]}, {"name": "Ruby", "prefix": "ruby", "colors": ["#fffcfd", "#fff7f8", "#feeaed", "#ffdce1", "#ffced6", "#f8bfc8", "#efacb8", "#e592a3", "#e54666", "#dc3b5d", "#ca244d", "#64172b"]}, {"name": "Crimson", "prefix": "crimson", "colors": ["#fffcfd", "#fef7f9", "#ffe9f0", "#fedce7", "#facedd", "#f3bed1", "#eaacc3", "#e093b2", "#e93d82", "#df3478", "#cb1d63", "#621639"]}, {"name": "Pink", "prefix": "pink", "colors": ["#fffcfe", "#fef7fb", "#fee9f5", "#fbdcef", "#f6cee7", "#efbfdd", "#e7acd0", "#dd93c2", "#d6409f", "#cf3897", "#c2298a", "#651249"]}, {"name": "Plum", "prefix": "plum", "colors": ["#fefcff", "#fdf7fd", "#fbebfb", "#f7def8", "#f2d1f3", "#e9c2ec", "#deade3", "#cf91d8", "#ab4aba", "#a144af", "#953ea3", "#53195d"]}, {"name": "Purple", "prefix": "purple", "colors": ["#fefcfe", "#fbf7fe", "#f7edfe", "#f2e2fc", "#ead5f9", "#e0c4f4", "#d1afec", "#be93e4", "#8e4ec6", "#8347b9", "#8145b5", "#402060"]}, {"name": "Violet", "prefix": "violet", "colors": ["#fdfcfe", "#faf8ff", "#f4f0fe", "#ebe4ff", "#e1d9ff", "#d4cafe", "#c2b5f5", "#aa99ec", "#6e56cf", "#654dc4", "#6550b9", "#2f265f"]}, {"name": "Iris", "prefix": "iris", "colors": ["#fdfdff", "#f8f8ff", "#f0f1fe", "#e6e7ff", "#dadcff", "#cbcdff", "#b8baf8", "#9b9ef0", "#5b5bd6", "#5151cd", "#5753c6", "#272962"]}, {"name": "Indigo", "prefix": "indigo", "colors": ["#fdfdfe", "#f7f9ff", "#edf2fe", "#e1e9ff", "#d2deff", "#c1d0ff", "#abbdf9", "#8da4ef", "#3e63dd", "#3358d4", "#3a5bc7", "#1f2d5c"]}, {"name": "Blue", "prefix": "blue", "colors": ["#fbfdff", "#f4faff", "#e6f4fe", "#d5efff", "#c2e5ff", "#acd8fc", "#8ec8f6", "#5eb1ef", "#0090ff", "#0588f0", "#0d74ce", "#113264"]}, {"name": "Cyan", "prefix": "cyan", "colors": ["#fafdfe", "#f2fafb", "#def7f9", "#caf1f6", "#b5e9f0", "#9ddde7", "#7dcedc", "#3db9cf", "#00a2c7", "#0797b9", "#107d98", "#0d3c48"]}, {"name": "Teal", "prefix": "teal", "colors": ["#fafefd", "#f3fbf9", "#e0f8f3", "#ccf3ea", "#b8eae0", "#a1ded2", "#83cdc1", "#53b9ab", "#12a594", "#0d9b8a", "#008573", "#0d3d38"]}, {"name": "Jade", "prefix": "jade", "colors": ["#fbfefd", "#f4fbf7", "#e6f7ed", "#d6f1e3", "#c3e9d7", "#acdec8", "#8bceb6", "#56ba9f", "#29a383", "#26997b", "#208368", "#1d3b31"]}, {"name": "Green", "prefix": "green", "colors": ["#fbfefc", "#f4fbf6", "#e6f6eb", "#d6f1df", "#c4e8d1", "#adddc0", "#8eceaa", "#5bb98b", "#30a46c", "#2b9a66", "#218358", "#193b2d"]}, {"name": "Grass", "prefix": "grass", "colors": ["#fbfefb", "#f5fbf5", "#e9f6e9", "#daf1db", "#c9e8ca", "#b2ddb5", "#94ce9a", "#65ba74", "#46a758", "#3e9b4f", "#2a7e3b", "#203c25"]}, {"name": "Lime", "prefix": "lime", "colors": ["#fcfdfa", "#f8faf3", "#eef6d6", "#e2f0bd", "#d3e7a6", "#c2da91", "#abc978", "#8db654", "#bdee63", "#b0e64c", "#5c7c2f", "#37401c"]}, {"name": "Yellow", "prefix": "yellow", "colors": ["#fdfdf9", "#fefce9", "#fffab8", "#fff394", "#ffe770", "#f3d768", "#e4c767", "#d5ae39", "#ffe629", "#ffdc00", "#9e6c00", "#473b1f"]}, {"name": "Amber", "prefix": "amber", "colors": ["#fefdfb", "#fefbe9", "#fff7c2", "#ffee9c", "#fbe577", "#f3d673", "#e9c162", "#e2a336", "#ffc53d", "#ffba18", "#ab6400", "#4f3422"]}, {"name": "Orange", "prefix": "orange", "colors": ["#fefcfb", "#fff7ed", "#ffefd6", "#ffdfb5", "#ffd19a", "#ffc182", "#f5ae73", "#ec9455", "#f76b15", "#ef5f00", "#cc4e00", "#582d1d"]}, {"name": "Brown", "prefix": "brown", "colors": ["#fefdfc", "#fcf9f6", "#f6eee7", "#f0e4d9", "#ebdaca", "#e4cdb7", "#dcbc9f", "#cea37e", "#ad7f58", "#a07553", "#815e46", "#3e332e"]}, {"name": "Bronze", "prefix": "bronze", "colors": ["#fdfcfc", "#fdf7f5", "#f6edea", "#efe4df", "#e7d9d3", "#dfcdc5", "#d3bcb3", "#c2a499", "#a18072", "#957468", "#7d5e54", "#43302b"]}, {"name": "Gold", "prefix": "gold", "colors": ["#fdfdfc", "#faf9f2", "#f2f0e7", "#eae6db", "#e1dccf", "#d8d0bf", "#cbc0aa", "#b9a88d", "#978365", "#8c7a5e", "#71624b", "#3b352b"]}, {"name": "Sky", "prefix": "sky", "colors": ["#f9feff", "#f1fafd", "#e1f6fd", "#d1f0fa", "#bee7f5", "#a9daed", "#8dcae3", "#60b3d7", "#7ce2fe", "#74daf8", "#00749e", "#1d3e56"]}, {"name": "Mint", "prefix": "mint", "colors": ["#f9fefd", "#f2fbf9", "#ddf9f2", "#c8f4e9", "#b3ecde", "#9ce0d0", "#7ecfbd", "#4cbba5", "#86ead4", "#7de0cb", "#027864", "#16433c"]}];
+
+const semanticTokens = [
+  {label:'Primary text / button', varName:'--mauve-12', hex:'#211f26'},
+  {label:'Page background',       varName:'--mauve-1',  hex:'#fdfcfd'},
+  {label:'Card background',       varName:'--white',    hex:'#ffffff'},
+  {label:'Subtle background',     varName:'--mauve-3',  hex:'#f2eff3'},
+  {label:'Borders',               varName:'--mauve-6',  hex:'#dbd8e0'},
+  {label:'Muted text',            varName:'--mauve-9',  hex:'#8e8c99'},
+  {label:'Crisis / destructive',  varName:'--red-9',    hex:'#e5484d'},
+  {label:'Success / completed',   varName:'--green-9',  hex:'#46a758'},
+  {label:'Warning / pending',     varName:'--yellow-9', hex:'#ffe629'},
+  {label:'Info / links',          varName:'--blue-9',   hex:'#0090ff'},
+  {label:'Feature highlights',    varName:'--violet-9', hex:'#6e56cf'},
+  {label:'Urgent',                varName:'--orange-9', hex:'#f76b15'},
+];
+
+const SCALE_GROUPS = [
+  { title: 'Grays', scales: ['Gray','Mauve','Slate','Sage','Olive','Sand'] },
+  { title: 'Reds & Pinks', scales: ['Tomato','Red','Ruby','Crimson','Pink','Plum'] },
+  { title: 'Purples & Blues', scales: ['Purple','Violet','Iris','Indigo','Blue','Cyan'] },
+  { title: 'Greens & Teals', scales: ['Teal','Jade','Green','Grass','Mint','Lime'] },
+  { title: 'Yellows & Earthy', scales: ['Yellow','Amber','Orange','Brown','Bronze','Gold','Sky'] },
+];
+
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  m.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function copyPrompt(id, btn) {
+  const box = document.getElementById(id);
+  const text = Array.from(box.childNodes)
+    .filter(n => n.nodeType === Node.TEXT_NODE)
+    .map(n => n.textContent).join('').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    showToast('Prompt copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyText(text, el) {
+  navigator.clipboard.writeText(text).then(() => {
+    const short = text.length > 40 ? text.substring(0, 40) + '…' : text;
+    showToast(short);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Semantic grid
+  const semGrid = document.getElementById('sem-grid');
+  semanticTokens.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'sem-chip';
+    el.onclick = () => copyText('var(' + t.varName + ')', el);
+    el.innerHTML = '<div class="sem-swatch" style="background:' + t.hex + ';' + (t.hex === '#ffffff' ? 'border:1px solid rgba(0,0,0,0.12)' : '') + '"></div><div><div class="sem-chip-label">' + t.label + '</div><div class="sem-chip-var">var(' + t.varName + ')</div></div>';
+    semGrid.appendChild(el);
+  });
+
+  // Scale grid grouped
+  const scaleGrid = document.getElementById('scale-grid');
+  const scaleMap = {};
+  ALL_RADIX_SCALES.forEach(s => scaleMap[s.name] = s);
+
+  SCALE_GROUPS.forEach(group => {
+    const groupEl = document.createElement('div');
+    groupEl.className = 'scale-group';
+    groupEl.innerHTML = '<div class="scale-group-title">' + group.title + '</div>';
+
+    group.scales.forEach(name => {
+      const s = scaleMap[name];
+      if (!s) return;
+      const sec = document.createElement('div');
+      sec.className = 'scale-section';
+      sec.innerHTML = '<div class="scale-name">' + s.name + '</div><div class="scale-row">' +
+        s.colors.map((hex, i) =>
+          '<div class="scale-swatch" style="background:' + hex + '" title="var(--' + s.prefix + '-' + (i+1) + ')" onclick="copyText(\'var(--' + s.prefix + '-' + (i+1) + ')\', this)"></div>'
+        ).join('') + '</div>';
+      groupEl.appendChild(sec);
+    });
+    scaleGrid.appendChild(groupEl);
+  });
+});
+</script>
+</body>
+</html>

@@ -8,69 +8,115 @@ It defines the rules, stack, and expectations for Soundcheck — Chorus's design
 ## What This Is
 
 **Soundcheck** is Chorus's design prototype playground — not a production codebase.
-Prototypes here exist to communicate ideas to stakeholders and inform engineering.
-They do not need to be perfect, scalable, or production-ready.
+Prototypes exist to communicate ideas to stakeholders and inform engineering.
 Speed and visual accuracy matter more than code quality.
 
 ---
 
 ## Stack
 
-- **HTML / CSS / Vanilla JS** — no build step, no bundler, no framework overhead
+- **HTML / Vanilla JS** — no build step, no bundler
 - **Tailwind CSS** — loaded via CDN for utility classes
-- **Font Awesome Pro** — loaded via kit CDN for icons (kit: f628cf1eec)
+- **shadcn/ui** — the ONLY component library; load via CDN (unpkg or jsDelivr)
+- **Font Awesome Pro** — kit: f628cf1eec
 - **React** — only if the prototype genuinely needs component interaction; use CDN version
-- Everything lives in a single `index.html` + `css/theme.css` + `js/app.js`
+- Everything lives in `index.html` + `css/theme.css` + `js/app.js`
+
+---
+
+## Components — shadcn/ui Only
+
+**Always use shadcn/ui. Never build custom components if a shadcn equivalent exists.**
+
+| Need | Use |
+|---|---|
+| Containers / panels | `Card`, `CardHeader`, `CardContent`, `CardFooter` |
+| Tables of data | `Table`, `TableHeader`, `TableRow`, `TableCell` |
+| Status indicators | `Badge` (variants: default, secondary, destructive, outline) |
+| Modals / forms | `Dialog`, `DialogTrigger`, `DialogContent` |
+| Tab navigation | `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` |
+| Buttons | `Button` (variants: default, outline, ghost, destructive, link) |
+| Form inputs | `Input`, `Select`, `Textarea`, `Switch`, `Checkbox` |
+| Callouts / warnings | `Alert`, `AlertTitle`, `AlertDescription` |
+| Dropdown actions | `DropdownMenu` |
+| Hover details | `Tooltip` |
+| Loading states | `Skeleton` |
+| Notifications | `Toast` / `Sonner` |
 
 ---
 
 ## Design System Rules
 
 ### Typography
-- Font: **Figtree** (Google Fonts) — always use this, never substitute
-- Headings: font-weight 600 (Semibold)
-- Body / Caption: font-weight 400 (Regular)
-- Use the `.h1–.h6`, `.body-1`, `.body-2`, `.caption`, `.overline`, `.subtitle-1`, `.subtitle-2` classes from theme.css
-- Never invent font sizes — always pull from the type scale
+- Font: **Figtree** (Google Fonts) — always, never substitute
+- Use Tailwind text utilities (`text-sm`, `text-base`, `text-lg`, `text-xl`, etc.)
+- Never hard-code font-size in px
 
 ### Spacing
-- 4px base grid: 0, 2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128px
-- Use CSS variables: `var(--space-1)` through `var(--space-32)`
-- Or Tailwind spacing utilities which are pre-mapped to the same scale
+- Use Tailwind spacing (`p-2`, `gap-4`, `mt-6`, etc.) — never arbitrary px values
+- Scale: p-1=4px, p-2=8px, p-3=12px, p-4=16px, p-6=24px, p-8=32px
 
 ### Border Radius
-- Border: 4px (`var(--radius-border)`) — table rows, subtle containers
-- XSmall: 8px (`var(--radius-xsmall)`) — small chips, badges
-- Small: 12px (`var(--radius-small)`) — buttons, inputs, small cards
-- Medium: 16px (`var(--radius-medium)`) — cards, modals
-- Large: 24px (`var(--radius-large)`) — large containers, sheets
-- Full: 999px (`var(--radius-full)`) — pills, avatars, tags
+- Use Tailwind: `rounded`, `rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-3xl`, `rounded-full`
 
-### Colors
-- **Neutral**: Use Mauve scale — `var(--mauve-1)` through `var(--mauve-12)`
-- **Mauve-12** is near-black — used for primary button fill and primary text
-- **Mauve-9/10/11** are used for muted/secondary text
-- **Mauve-4/5/6** are used for borders and subtle backgrounds
-- **Accent colors**: Use Radix accent CSS variables (`--blue-9`, `--green-9`, `--red-9`, etc.)
-  - Blue = informational
-  - Green = success / positive
-  - Red = destructive / error
-  - Yellow = warning
-  - Violet / Purple / Indigo = feature highlights, brand moments
-- Never use hex values directly in prototype code — always use the CSS variables
+### Colors — Radix CSS Variables Only
 
-### Buttons
-- **Primary** (`.btn.btn-primary`): Mauve-12 fill, white text — main actions
-- **Outlined** (`.btn.btn-outlined`): White fill, Mauve-6 border — secondary actions
-- **Ghost/Text** (`.btn.btn-ghost`): Transparent, Mauve-11 text — tertiary/inline actions
-- Icon + label buttons: use Font Awesome with a gap, e.g. `<i class="fa-regular fa-plus"></i> Add item`
+**Never use hex values or Tailwind color classes (blue-500, red-400, etc.).**
+**Always use Radix CSS variables from theme.css.**
+
+#### Full Radix palette — 31 scales, 12 steps each:
+
+**Grays** (neutral UI chrome)
+- `--gray-N` · `--mauve-N` ← primary neutral · `--slate-N` · `--sage-N` · `--olive-N` · `--sand-N`
+
+**Reds & Pinks**
+- `--tomato-N` · `--red-N` ← errors/destructive · `--ruby-N` · `--crimson-N` · `--pink-N` · `--plum-N`
+
+**Purples & Blues**
+- `--purple-N` · `--violet-N` ← brand highlights · `--iris-N` · `--indigo-N` · `--blue-N` ← info/links · `--cyan-N`
+
+**Greens & Teals**
+- `--teal-N` · `--jade-N` · `--green-N` ← success · `--grass-N` · `--mint-N` · `--lime-N`
+
+**Yellows & Earthy**
+- `--yellow-N` ← warnings · `--amber-N` · `--orange-N` ← urgent · `--brown-N` · `--bronze-N` · `--gold-N` · `--sky-N`
+
+#### Step semantics (same on every scale):
+- **1–2**: Page/subtle backgrounds
+- **3–5**: UI element backgrounds, hover states
+- **6–8**: Borders and separators
+- **9**: Solid fill — the main color of the scale
+- **10**: Hovered solid (slightly darker)
+- **11**: Accessible text on white backgrounds
+- **12**: High-contrast text, darkest shade
+
+#### Common patterns:
+```css
+/* Neutral badge */
+background: var(--mauve-3); color: var(--mauve-11); border: 1px solid var(--mauve-6);
+
+/* Crisis/error badge */
+background: var(--red-3); color: var(--red-11); border: 1px solid var(--red-6);
+
+/* Success badge */
+background: var(--green-3); color: var(--green-11); border: 1px solid var(--green-6);
+
+/* Warning badge */
+background: var(--yellow-3); color: var(--yellow-11); border: 1px solid var(--yellow-7);
+
+/* Primary button */
+background: var(--mauve-12); color: white;
+
+/* Sidebar */
+background: var(--mauve-2); border-right: 1px solid var(--mauve-6);
+
+/* Active nav item */
+background: var(--blue-3); color: var(--blue-11);
+```
 
 ### Icons
-- Use **Font Awesome Pro** (kit already loaded)
-- Default style: `fa-regular` (outlined) for UI icons
-- Use `fa-solid` for emphasis or filled states
-- Keep icons at 14–16px in most UI contexts
-- Example: `<i class="fa-regular fa-magnifying-glass"></i>`
+- **Font Awesome Pro** — `fa-regular` default, `fa-solid` for emphasis
+- Keep icons at 14–16px in most contexts
 
 ---
 
@@ -78,47 +124,69 @@ Speed and visual accuracy matter more than code quality.
 
 ```
 prototype-name/
-├── index.html        ← all markup, import Tailwind + FA + theme.css
+├── index.html        ← all markup; imports Tailwind, FA, shadcn, theme.css
 ├── css/
-│   └── theme.css     ← design tokens, base components (DO NOT EDIT per prototype)
+│   └── theme.css     ← Radix CSS variables (DO NOT EDIT per prototype)
 ├── js/
+│   ├── db.js         ← Supabase data layer (DO NOT EDIT)
 │   └── app.js        ← prototype-specific logic only
-├── CLAUDE.md         ← this file (inherited from main branch)
-└── BRIEF.md          ← per-prototype context (designer fills this in)
+├── CLAUDE.md         ← this file
+└── BRIEF.md          ← per-prototype context (fill in before building)
 ```
+---
+
+## Data Isolation — How Prototype Scoping Works
+
+**Claude does not need to manage prototype_id. The data layer handles it automatically.**
+
+When `new-prototype.sh` creates a branch, it:
+1. Sets `<meta name="prototype-id" content="feature-name">` in `index.html`
+2. Runs `seed-prototype.sh` to copy the base seed data into the prototype's scope
+
+`db.js` then:
+- **Reads** return rows where `prototype_id = 'seed'` OR `prototype_id = 'feature-name'`
+- **Writes** automatically tag every new row with `prototype_id = 'feature-name'`
+
+This means five designers can work in the same Supabase project simultaneously without collisions.
+
+**What this means for Claude when building prototypes:**
+- Use `db.js` methods exactly as documented — scoping is invisible
+- Do NOT add `prototype_id` to any data objects manually — it will be added automatically
+- Do NOT filter by `prototype_id` in queries — `db.js` already does this
+- If debugging data issues, use `db.debug.whoami()` and `db.debug.myRows('table_name')` in the browser console
+
+
 
 ---
 
 ## What Claude Should Do
 
-- Read `BRIEF.md` before writing any code — it contains the problem context
-- Ask clarifying questions if the brief is vague before building
-- Build in `index.html` — keep it as a single file where possible
-- Use `theme.css` classes and CSS variables — do not inline arbitrary styles
-- Keep JS simple and readable — no complex state management
+- Read `BRIEF.md` before writing any code
+- Ask clarifying questions if the brief is vague
+- Use **shadcn/ui** for all standard UI patterns
+- Use **Radix CSS variables** for all colors
+- Use **Tailwind spacing** — never arbitrary px values
+- Use **Figtree** font exclusively
+- Use realistic placeholder content — Chorus product domain, not Lorem ipsum
 - Add comments to explain non-obvious prototype logic
-- Use realistic placeholder content (not "Lorem ipsum") — use the product domain
-- When generating UI, reference actual Radix color names and spacing values
 
 ## What Claude Should NOT Do
 
 - Do not install npm packages or create a build pipeline
-- Do not use frameworks unless React is explicitly needed
-- Do not create separate component files — keep it in index.html
-- Do not use arbitrary colors or font sizes outside the design system
-- Do not optimize for performance — this is a prototype
+- Do not build custom card, badge, button, table, or modal components
+- Do not use hex colors or Tailwind color classes (text-blue-500, bg-red-400)
+- Do not use arbitrary spacing values
+- Do not create separate component files
+- Do not optimize for performance
 - Do not add complex error handling — fake it if needed
 
 ---
 
 ## Sharing Prototypes
 
-Run `./save-prototype.sh` from the repo root to:
-1. Commit and push the current branch
-2. Deploy to GitHub Pages
-3. Get a shareable URL copied to your clipboard
+Run `./save-prototype.sh` to commit, push, deploy to GitHub Pages, and copy the URL.
 
-URL format: `https://[username].github.io/soundcheck/[branch-name]/`
+URL format: `https://creecher.github.io/Soundcheck/[branch-name]/`
 
 ---
 

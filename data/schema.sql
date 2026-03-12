@@ -43,6 +43,7 @@ CREATE TABLE clients (
   insurance_type TEXT,
   avatar_url TEXT,
   ai_summary TEXT,
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -51,6 +52,7 @@ CREATE TABLE clients (
 CREATE TABLE diagnoses (
   id TEXT PRIMARY KEY,
   client_id TEXT REFERENCES clients(id),
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   diagnosis_name TEXT NOT NULL,
   icd_code TEXT,
   diagnosed_date DATE,
@@ -62,6 +64,7 @@ CREATE TABLE diagnoses (
 CREATE TABLE medications (
   id TEXT PRIMARY KEY,
   client_id TEXT REFERENCES clients(id),
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   medication_name TEXT NOT NULL,
   dosage TEXT,
   condition TEXT,
@@ -74,6 +77,7 @@ CREATE TABLE medications (
 CREATE TABLE allergies (
   id TEXT PRIMARY KEY,
   client_id TEXT REFERENCES clients(id),
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   allergen TEXT NOT NULL,
   severity TEXT CHECK (severity IN ('mild', 'moderate', 'severe')) DEFAULT 'moderate',
   note TEXT,
@@ -84,6 +88,7 @@ CREATE TABLE allergies (
 CREATE TABLE vitals (
   id TEXT PRIMARY KEY,
   client_id TEXT REFERENCES clients(id),
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   type TEXT NOT NULL,
   value TEXT NOT NULL,
   unit TEXT,
@@ -95,6 +100,7 @@ CREATE TABLE vitals (
 CREATE TABLE warm_line_calls (
   id TEXT PRIMARY KEY,
   client_id TEXT REFERENCES clients(id),
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   caller_name TEXT NOT NULL,
   phone TEXT,
   relationship TEXT CHECK (relationship IN ('self', 'family', 'other')) DEFAULT 'self',
@@ -111,6 +117,7 @@ CREATE TABLE warm_line_calls (
 CREATE TABLE referrals (
   id TEXT PRIMARY KEY,
   client_id TEXT REFERENCES clients(id),
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   from_program TEXT REFERENCES programs(id),
   to_program TEXT REFERENCES programs(id),
   urgency TEXT CHECK (urgency IN ('routine', 'urgent', 'crisis')) DEFAULT 'routine',
@@ -126,6 +133,7 @@ CREATE TABLE referrals (
 CREATE TABLE care_journey_events (
   id TEXT PRIMARY KEY,
   client_id TEXT REFERENCES clients(id),
+  prototype_id TEXT NOT NULL DEFAULT 'seed',
   event_type TEXT CHECK (event_type IN ('call', 'assessment', 'referral', 'admission', 'appointment', 'note')) NOT NULL,
   program_id TEXT REFERENCES programs(id),
   title TEXT NOT NULL,
