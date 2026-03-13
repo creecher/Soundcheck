@@ -1,28 +1,15 @@
-# CLAUDE.md
+# CLAUDE.md — Soundcheck
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file is read automatically by Claude Code at the start of every session.
+It defines the rules, stack, and expectations for Soundcheck — Chorus's design prototype playground.
 
 ---
+
+## What This Is
 
 **Soundcheck** is Chorus's design prototype playground — not a production codebase.
 Prototypes exist to communicate ideas to stakeholders and inform engineering.
 Speed and visual accuracy matter more than code quality.
-
----
-
-## Workflow Commands
-
-```bash
-./new-prototype.sh <feature-name>   # pull main, create prototype/<feature-name> branch, seed data, open VS Code
-./save-prototype.sh                 # git add ., commit, push, print GitHub Pages URL
-./seed-prototype.sh <prototype-id>  # (called by new-prototype.sh) copies seed rows into prototype scope
-```
-
-Every new prototype lives on its own branch (`prototype/<feature-name>`). Never commit directly to `main`.
-
-`CLAUDE.md` and `css/theme.css` live on `main` and are inherited by every branch — don't edit them per-prototype.
-
-`backstage.html` (on main) is a live design system cheatsheet — open it in a browser to see all colors, components, and icons.
 
 ---
 
@@ -70,16 +57,7 @@ Every new prototype lives on its own branch (`prototype/<feature-name>`). Never 
 - Scale: p-1=4px, p-2=8px, p-3=12px, p-4=16px, p-6=24px, p-8=32px
 
 ### Border Radius
-Tailwind is configured with custom aliases (use these instead of default Tailwind radius names):
-
-| Class | Value |
-|---|---|
-| `rounded-border` | 4px |
-| `rounded-xsm` | 8px |
-| `rounded-sm` | 12px |
-| `rounded-md` | 16px |
-| `rounded-lg` | 24px |
-| `rounded-full` | 999px |
+- Use Tailwind: `rounded`, `rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-3xl`, `rounded-full`
 
 ### Colors — Radix CSS Variables Only
 
@@ -142,69 +120,6 @@ background: var(--blue-3); color: var(--blue-11);
 
 ---
 
-## db.js API Reference
-
-All methods return Promises. Include `<script src="../js/db.js"></script>` in `index.html` to use `window.db`.
-
-```javascript
-// Clients (prototype-scoped)
-db.clients.list(programId?)          // all clients, optional filter by program
-db.clients.get('CL-005')             // single client
-db.clients.getHighRisk()             // risk_level in (high, crisis)
-db.clients.search('term')            // name search
-db.clients.create(data)              // auto-generates id: CL-{timestamp}
-db.clients.update(id, data)          // patches + sets updated_at
-
-// Staff & Programs (shared reference data — NOT prototype-scoped)
-db.staff.list()
-db.staff.get(id)
-db.staff.byProgram(programId)
-db.programs.list()
-db.programs.get(id)
-
-// Clinical data (prototype-scoped)
-db.diagnoses.forClient(clientId)     // all diagnoses
-db.diagnoses.current(clientId)       // status = current
-db.diagnoses.past(clientId)
-db.medications.forClient(clientId)
-db.medications.missed(clientId)
-db.medications.active(clientId)
-db.allergies.forClient(clientId)
-db.vitals.forClient(clientId)
-db.vitals.latest(clientId)           // last 3 readings
-
-// Warm line calls (prototype-scoped)
-db.calls.list()
-db.calls.forClient(clientId)
-db.calls.byPriority(priority)
-db.calls.needsFollowUp()
-db.calls.create(data)                // auto-generates id: call-{timestamp}
-
-// Referrals (prototype-scoped)
-db.referrals.list()
-db.referrals.forClient(clientId)
-db.referrals.byStatus(status)
-db.referrals.pending()
-db.referrals.inProgress()
-db.referrals.create(data)            // auto-generates id: ref-{timestamp}
-db.referrals.markComplete(id)
-
-// Care journey (prototype-scoped)
-db.journey.forClient(clientId)
-db.journey.current(clientId)         // is_current = true
-db.journey.addEvent(data)            // auto-generates id: evt-{timestamp}
-
-// Dashboard
-db.dashboard.summary()
-// → { activeClients, todaysCalls, pendingReferrals, highRiskClients }
-
-// Debug (browser console only)
-db.debug.whoami()                    // prints current prototype ID
-db.debug.myRows('table_name')        // console.table of this prototype's rows
-```
-
----
-
 ## File Structure
 
 ```
@@ -243,6 +158,83 @@ This means five designers can work in the same Supabase project simultaneously w
 
 
 ---
+
+
+---
+
+## db.js — Full Method Reference
+
+All data comes from `db.js`. Never hardcode data values. Every method returns a Promise — always use `await`.
+
+```javascript
+// DASHBOARD
+await db.dashboard.summary()
+// → { activeClients, todaysCalls, pendingReferrals, highRiskClients }
+
+// CLIENTS
+await db.clients.list()                        // all clients, sorted by last name
+await db.clients.list('prog-warm-line')        // clients in a specific program
+await db.clients.get('CL-001')                 // single client by ID
+await db.clients.getHighRisk()                 // clients where risk = high or crisis
+await db.clients.search('rodriguez')           // search by first or last name
+await db.clients.create({ first_name, last_name, program_id, risk_level, ... })
+await db.clients.update('CL-001', { risk_level: 'high' })
+
+// STAFF (shared reference data — not prototype-scoped)
+await db.staff.list()                          // all staff
+await db.staff.get('staff-001')                // single staff member
+await db.staff.byProgram('prog-warm-line')     // staff assigned to a program
+
+// PROGRAMS (shared reference data — not prototype-scoped)
+await db.programs.list()                       // all three programs
+await db.programs.get('prog-warm-line')        // single program
+
+// REFERRALS
+await db.referrals.list()                      // all referrals, newest first
+await db.referrals.pending()                   // status = pending
+await db.referrals.inProgress()                // status = in-progress
+await db.referrals.forClient('CL-001')         // referrals for a specific client
+await db.referrals.byStatus('completed')       // filter by any status
+await db.referrals.create({ client_id, from_program, to_program, urgency, reason, created_by })
+await db.referrals.markComplete('ref-001')     // mark a referral completed
+
+// WARM LINE CALLS
+await db.calls.list()                          // all calls, newest first
+await db.calls.forClient('CL-001')             // calls linked to a client
+await db.calls.byPriority('crisis')            // filter by priority (routine/urgent/crisis)
+await db.calls.needsFollowUp()                 // calls where follow_up_required = true
+await db.calls.create({ caller_name, phone, relationship, priority, summary, handled_by, duration_minutes })
+
+// DIAGNOSES
+await db.diagnoses.forClient('CL-001')         // all diagnoses for a client
+await db.diagnoses.current('CL-001')           // status = current only
+await db.diagnoses.past('CL-001')              // status = past only
+
+// MEDICATIONS
+await db.medications.forClient('CL-001')       // all medications
+await db.medications.active('CL-001')          // status = active
+await db.medications.missed('CL-001')          // status = missed
+
+// ALLERGIES
+await db.allergies.forClient('CL-001')         // all allergies for a client
+
+// VITALS
+await db.vitals.forClient('CL-001')            // all vitals, newest first
+await db.vitals.latest('CL-001')               // most recent 3 vitals
+
+// CARE JOURNEY
+await db.journey.forClient('CL-001')           // all events, chronological
+await db.journey.current('CL-001')             // the current/active event
+await db.journey.addEvent({ client_id, event_type, title, program_id, performed_by, note })
+```
+
+### Known IDs — safe to hardcode in prototypes
+
+**Clients:** CL-001 (Michael Rodriguez) · CL-002 (Maria Rodriguez) · CL-003 (Jennifer Lee) · CL-004 (Robert Thompson) · CL-005 (Carlos Sanchez) · CL-006 (Linda Garcia) · CL-007 (Sarah Johnson)
+
+**Staff:** staff-001 (Mark Thompson) · staff-002 (Lisa Martinez) · staff-003 (Jane Smith) · staff-004 (Dr. Emily Chen) · staff-005 (David Nguyen)
+
+**Programs:** prog-warm-line · prog-central-intake · prog-care-facility
 
 ## What Claude Should Do
 
